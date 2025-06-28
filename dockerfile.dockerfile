@@ -16,7 +16,7 @@ RUN git clone --depth 1 https://github.com/tevador/RandomX.git /app/RandomX
 RUN mkdir /app/RandomX/build && cd /app/RandomX/build && cmake .. && make -j
 
 # Copy miner source, job.json, and Makefile
-COPY main.c job.json Makefile /app/
+COPY main.cpp job.json Makefile /app/
 
 # Build miner
 RUN make
