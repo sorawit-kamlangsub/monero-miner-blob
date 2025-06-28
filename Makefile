@@ -4,8 +4,8 @@ LDFLAGS = ./RandomX/build/librandomx.a -pthread -lm
 
 all: miner
 
-miner: main.c
-	$(CC) $(CFLAGS) -o miner main.c $(LDFLAGS)
+miner: main.cpp
+	$(CC) $(CFLAGS) -o miner main.cpp $(LDFLAGS)
 
 clean:
 	rm -f miner
