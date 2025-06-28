@@ -1,4 +1,4 @@
-CC = g++  # <-- use g++ instead of gcc
+CC = g++ 
 CFLAGS = -O2 -std=c++11 -I./RandomX/src
 LDFLAGS = ./RandomX/build/librandomx.a -pthread -lm
 
