@@ -7,22 +7,22 @@
 // 🔹 Helper: Convert hex string to binary
 void hex_to_bin(const char* hex, uint8_t* out, size_t len) {
     for (size_t i = 0; i < len; i++) {
-        sscanf(hex + 2*i, "%2hhx", &out[i]);
+        sscanf(hex + 2 * i, "%2hhx", &out[i]);
     }
 }
 
-// 🔹 Helper: Parse job.json (very basic, no full JSON lib)
+// 🔹 Helper: Parse job.json (very basic)
 int extract_field(const char* json, const char* key, char* output, size_t max_len) {
-    char* found = strstr(json, key);
+    const char* found = strstr(json, key);
     if (!found) return 0;
 
-    char* quote1 = strchr(found, '"');
+    const char* quote1 = strchr(found, '"');
     if (!quote1) return 0;
-    char* quote2 = strchr(quote1 + 1, '"');
+    const char* quote2 = strchr(quote1 + 1, '"');
     if (!quote2) return 0;
-    char* quote3 = strchr(quote2 + 1, '"');
+    const char* quote3 = strchr(quote2 + 1, '"');
     if (!quote3) return 0;
-    char* quote4 = strchr(quote3 + 1, '"');
+    const char* quote4 = strchr(quote3 + 1, '"');
     if (!quote4) return 0;
 
     size_t len = quote4 - quote3 - 1;
@@ -48,8 +48,12 @@ int main() {
     fseek(f, 0, SEEK_END);
     long fsize = ftell(f);
     rewind(f);
-    char* json = malloc(fsize + 1);
-    fread(json, 1, fsize, f);
+    char* json = (char*)malloc(fsize + 1);  // Cast malloc to char*
+    if (!json) {
+        fclose(f);
+        return 1;
+    }
+    fread(json, 1, fsize, f);  // Optional: Check return value
     json[fsize] = 0;
     fclose(f);
 
@@ -58,6 +62,7 @@ int main() {
         !extract_field(json, "seed_hash", seed_hex, sizeof(seed_hex)) ||
         !extract_field(json, "target", target_hex, sizeof(target_hex))) {
         printf("❌ Failed to extract fields from job.json\n");
+        free(json);
         return 1;
     }
 
@@ -80,7 +85,7 @@ int main() {
         target = (uint64_t)mantissa << (8 * (exponent - 3));
     }
 
-    printf("Mining target: 0x%llx\n", target);
+    printf("Mining target: 0x%lx\n", target);  // Use %lx not %llx
 
     // 🔹 RandomX setup
     randomx_flags flags = RANDOMX_FLAG_DEFAULT | RANDOMX_FLAG_JIT | RANDOMX_FLAG_HARD_AES;
