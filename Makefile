@@ -1,5 +1,5 @@
-CC = gcc
-CFLAGS = -O2 -std=c11 -I./RandomX/src
+CC = g++  # <-- use g++ instead of gcc
+CFLAGS = -O2 -std=c++11 -I./RandomX/src
 LDFLAGS = ./RandomX/build/librandomx.a -pthread -lm
 
 all: miner
